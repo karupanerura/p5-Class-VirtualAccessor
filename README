@@ -2,7 +2,21 @@ NAME
     Class::VirtualAccessor -
 
 SYNOPSIS
-      use Class::VirtualAccessor;
+      use Class::VirtualAccessor qw/hoge fuga hogefuga/;
+
+      sub new {
+          my $class = shift;
+          my $args  = (@_ == 1) ? $_[0] : +{ @_ };
+
+          bless(+{ %$args } => $class);
+      }
+
+      sub method {
+          my $self = shift;
+
+          $self->{hoge} = 'hogehoge';   # ok
+          $self->{hoga} = 'hogehoge';   # typo! error!
+      }
 
 DESCRIPTION
     Class::VirtualAccessor is
