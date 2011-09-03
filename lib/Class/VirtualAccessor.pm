@@ -1,6 +1,8 @@
 package Class::VirtualAccessor;
 use strict;
 use warnings;
+
+use 5.006_000;
 our $VERSION = '0.01';
 
 use Carp ();
@@ -12,7 +14,7 @@ sub import {
     return if $args->{disable};
 
     my $caller = caller;
-    my $bless = sub {
+    my $bless = sub ($$) { ## no critic
         croak('This module support HashRef only.') if(ref $_[0] ne 'HASH');
         my $obj = CORE::bless($_[0] => $_[1]);
 

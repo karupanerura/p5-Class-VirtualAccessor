@@ -2,7 +2,10 @@ NAME
     Class::VirtualAccessor -
 
 SYNOPSIS
-      use Class::VirtualAccessor qw/hoge fuga hogefuga/;
+      use Class::VirtualAccessor (
+        rw => [qw/hoge fuga/],
+        ro => [qw/foo/],
+      );
 
       sub new {
           my $class = shift;

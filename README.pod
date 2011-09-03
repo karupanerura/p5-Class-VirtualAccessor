@@ -1,10 +1,13 @@
 =head1 NAME
 
-Class::VirtualAccessor -
+Class::VirtualAccessor - 
 
 =head1 SYNOPSIS
 
-  use Class::VirtualAccessor qw/hoge fuga hogefuga/;
+  use Class::VirtualAccessor (
+    rw => [qw/hoge fuga/],
+    ro => [qw/foo/],
+  );
 
   sub new {
       my $class = shift;
