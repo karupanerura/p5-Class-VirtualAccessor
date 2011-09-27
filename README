@@ -1,5 +1,5 @@
 NAME
-    Class::VirtualAccessor -
+    Class::VirtualAccessor - object
 
 SYNOPSIS
       use Class::VirtualAccessor (
@@ -11,7 +11,7 @@ SYNOPSIS
           my $class = shift;
           my $args  = (@_ == 1) ? $_[0] : +{ @_ };
 
-          bless(+{ %$args } => $class);
+          vbless(+{ %$args } => $class);
       }
 
       sub method {

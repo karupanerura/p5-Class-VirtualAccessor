@@ -14,7 +14,7 @@ sub import {
     return if $args->{disable};
 
     my $caller = caller;
-    my $bless = sub ($$) { ## no critic
+    my $vbless = sub ($$) { ## no critic
         croak('This module support HashRef only.') if(ref $_[0] ne 'HASH');
         my $obj = CORE::bless($_[0] => $_[1]);
 
@@ -47,16 +47,18 @@ sub import {
 
     {
         no strict 'refs';
-        *{"${caller}::bless"} = $bless;
+        *{"${caller}::vbless"} = $vbless;
     }
 }
+
+
 
 1;
 __END__
 
 =head1 NAME
 
-Class::VirtualAccessor - 
+Class::VirtualAccessor - object 
 
 =head1 SYNOPSIS
 
@@ -69,7 +71,7 @@ Class::VirtualAccessor -
       my $class = shift;
       my $args  = (@_ == 1) ? $_[0] : +{ @_ };
 
-      bless(+{ %$args } => $class);
+      vbless(+{ %$args } => $class);
   }
 
   sub method {

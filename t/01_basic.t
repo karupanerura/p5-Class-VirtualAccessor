@@ -9,17 +9,20 @@ sub new {
     my $class = shift;
     my $args  = (@_ == 1) ? $_[0] : +{ @_ };
 
-    bless(+{ %$args } => $class);
+    vbless(+{ %$args } => $class);
 }
 
 package main;
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::Exception;
 
 my $obj;
-lives_ok { $obj = Foo->new(hoge => 'fuga') } 'bless ok';
+lives_ok {
+    $obj = Foo->new(hoge => 'fuga');
+    is ref($obj), 'Foo', "is Foo's object";
+} 'bless ok';
 lives_ok { $obj->{fuga} = 'hoge' } 'rw variable write ok';
 lives_ok { $obj->{foobar} = 'foobar' } 'wo variable write ok';
 lives_ok {
