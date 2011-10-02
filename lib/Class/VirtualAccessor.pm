@@ -7,16 +7,17 @@ our $VERSION = '0.01';
 
 use Carp ();
 use Variable::Magic ();
+use Scalar::Util qw/reftype/;
 
 sub import {
     my $class  = shift;
     my $args   = (@_ == 1) ? $_[0] : +{ @_ };
-    return if $args->{disable};
 
     my $caller = caller;
-    my $vbless = sub ($$) { ## no critic
-        croak('This module support HashRef only.') if(ref $_[0] ne 'HASH');
-        my $obj = CORE::bless($_[0] => $_[1]);
+
+    my $with_vaccessor = sub {
+        my $obj = shift;
+        croak('This module support HashRef only.') if(reftype($obj) ne 'HASH');
 
         if (exists $args->{ro}) {
             my $wiz = Variable::Magic::wizard(set => sub { Carp::croak('This variable is read only.') });
@@ -45,20 +46,28 @@ sub import {
         return $obj;
     };
 
+    my $vbless = sub ($$) { ## no critic
+        $with_vaccessor->(bless($_[0] => $_[1]));
+    };
+
     {
+        # export methods
         no strict 'refs';
-        *{"${caller}::vbless"} = $vbless;
+        *{"${caller}::vbless"} = $args->{disable} ?
+            \&bless:
+            $vbless;
+        *{"${caller}::with_vaccessor"} = $args->{disable} ?
+            sub { $_[0] }:
+            $with_vaccessor;
     }
 }
-
-
 
 1;
 __END__
 
 =head1 NAME
 
-Class::VirtualAccessor - object 
+Class::VirtualAccessor - object variable access supporter
 
 =head1 SYNOPSIS
 
@@ -72,6 +81,9 @@ Class::VirtualAccessor - object
       my $args  = (@_ == 1) ? $_[0] : +{ @_ };
 
       vbless(+{ %$args } => $class);
+
+      # or you can use this interface
+      # bless(+{ %$args } => $class)->with_vaccessor;
   }
 
   sub method {
@@ -79,11 +91,12 @@ Class::VirtualAccessor - object
 
       $self->{hoge} = 'hogehoge';   # ok
       $self->{hoga} = 'hogehoge';   # typo! error!
+      $self->{foo}  = 'hogehoge';   # can't write! error!
   }
 
 =head1 DESCRIPTION
 
-Class::VirtualAccessor is
+Class::VirtualAccessor is 
 
 =head1 AUTHOR
 

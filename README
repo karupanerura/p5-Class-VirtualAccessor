@@ -1,5 +1,5 @@
 NAME
-    Class::VirtualAccessor - object
+    Class::VirtualAccessor - object variable access supporter
 
 SYNOPSIS
       use Class::VirtualAccessor (
@@ -12,6 +12,9 @@ SYNOPSIS
           my $args  = (@_ == 1) ? $_[0] : +{ @_ };
 
           vbless(+{ %$args } => $class);
+
+          # or you can use this interface
+          # bless(+{ %$args } => $class)->with_vaccessor;
       }
 
       sub method {
@@ -19,6 +22,7 @@ SYNOPSIS
 
           $self->{hoge} = 'hogehoge';   # ok
           $self->{hoga} = 'hogehoge';   # typo! error!
+          $self->{foo}  = 'hogehoge';   # can't write! error!
       }
 
 DESCRIPTION

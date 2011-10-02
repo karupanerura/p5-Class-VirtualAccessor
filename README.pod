@@ -1,6 +1,6 @@
 =head1 NAME
 
-Class::VirtualAccessor - object 
+Class::VirtualAccessor - object variable access supporter
 
 =head1 SYNOPSIS
 
@@ -14,6 +14,9 @@ Class::VirtualAccessor - object
       my $args  = (@_ == 1) ? $_[0] : +{ @_ };
 
       vbless(+{ %$args } => $class);
+
+      # or you can use this interface
+      # bless(+{ %$args } => $class)->with_vaccessor;
   }
 
   sub method {
@@ -21,11 +24,12 @@ Class::VirtualAccessor - object
 
       $self->{hoge} = 'hogehoge';   # ok
       $self->{hoga} = 'hogehoge';   # typo! error!
+      $self->{foo}  = 'hogehoge';   # can't write! error!
   }
 
 =head1 DESCRIPTION
 
-Class::VirtualAccessor is
+Class::VirtualAccessor is 
 
 =head1 AUTHOR
 
